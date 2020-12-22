@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<input type="text" onkeyup="tip(this.value)"/>
+		<!--<p><a href="#0">你是我心内的一首歌</a></p>-->
+		<!--<p><audio controls src="mp3/你是我心内的一首歌_王力宏.mp3"></audio></p>-->
+	</body>
+	<script src="js/zepto.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		function tip (keyword) {
+			$('p').remove();//避免多次添加，每次搜索前移除所有p
+			console.log(keyword);
+			$.ajax({
+				type:"get",
+				url:"mp3.json",
+				success:function (arr) {
+//					console.log(arr)
+					for (let i=0;i<arr.length;i++) {
+						if (keyword=="") {
+							break;
+						}
+						console.log(arr[i]);//对象，sing，singer，url
+						if ((arr[i].sing+arr[i].singer).indexOf(keyword)!=-1) {
+							$('body').append($('<p><a href="#'+i+'">'+arr[i].sing+'-'+arr[i].singer+'</a></p>'))
+//							<p><a href="#0">你是我心内的一首歌</a></p>
+							$('a').click(function () {
+								console.log($(this)[0].hash);//获取a链接(它只获取href的值#0，而非http……html#0)
+								$('p').remove();
+								$('body').append('<p><audio controls src="'+arr[i].url+'"></audio></p>')
+//								<p><audio controls src="mp3/你是我心内的一首歌_王力宏.mp3"></audio></p>
+							})
+						}
+					}
+				}
+			});
+		}
+	</script>
+</html>
